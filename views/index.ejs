@@ -942,9 +942,18 @@
     <script>
       const country_codes = '<%= countries %>'.split(',');
       console.log(typeof '<%= countries %>');
+
       country_codes.forEach((code) => {
-        document.getElementById(code).style.fill = '<%= color %>';
+        let element = document.getElementById(code);
+        if (element) {
+          element.style.fill = 'teal';
+        }
       });
+      // const country_codes = '<%= countries %>'.split(',');
+      // console.log(typeof '<%= countries %>');
+      // country_codes.forEach((code) => {
+      //   document.getElementById(code).style.fill = '<%= color %>';
+      // });
     </script>
   </body>
 </html>

@@ -44,6 +44,7 @@ app.get('/', async (req, res) => {
     color: 'teal',
   });
 });
+
 app.post('/add', async (req, res) => {
   const input = req.body['country'];
 
@@ -68,6 +69,7 @@ app.post('/add', async (req, res) => {
     console.log(err);
   }
 });
+
 app.post('/user', async (req, res) => {});
 
 app.post('/new', async (req, res) => {
