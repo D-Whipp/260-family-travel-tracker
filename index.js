@@ -20,10 +20,24 @@ app.use(express.static('public'));
 
 let currentUserId = 1;
 
-let users = [
-  { id: 1, name: 'Angela', color: 'teal' },
-  { id: 2, name: 'Jack', color: 'powderblue' },
-];
+// let users = [
+//   { id: 1, name: 'Angela', color: 'teal' },
+//   { id: 2, name: 'Jack', color: 'powderblue' },
+//   { id: 3, name: 'Miles', color: 'darkred' },
+// ];
+
+let users = [];
+
+async function getUsers() {
+  const result = await db.query('SELECT * FROM users');
+  // console.log('RESULT: ', result.rows);
+  users = [];
+  result.rows.forEach((user) => {
+    users.push(user);
+  });
+  // console.log('USERS: ', users);
+  return users;
+}
 
 async function checkVisisted() {
   const result = await db.query(
@@ -36,6 +50,8 @@ async function checkVisisted() {
   return countries;
 }
 app.get('/', async (req, res) => {
+  const users = await getUsers();
+  console.log('USERS', users);
   const countries = await checkVisisted();
   res.render('index.ejs', {
     countries: countries,

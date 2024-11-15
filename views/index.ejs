@@ -16,7 +16,8 @@
       action="/user"
       method="post"
     >
-      <% users.forEach(function(user) { %>
+      <% users.forEach(function(user) { console.log('EJS USER: ',
+      user) %>
       <input
         type="submit"
         name="user"
@@ -27,7 +28,7 @@
         for="<%= user.id %>"
         style="background-color: <%= user.color %>"
       >
-        <%= user.name %>
+        <%= user.first_name %>
       </label>
       <% }); %>
 
