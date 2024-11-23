@@ -35,7 +35,6 @@ async function getUsers() {
   result.rows.forEach((user) => {
     users.push(user);
   });
-  // console.log('USERS: ', users);
   return users;
 }
 
@@ -91,93 +90,33 @@ app.post('/user', async (req, res) => {
   const users = await getUsers();
 
   const currentUser = req.body.user;
-  // console.log('CURRENT USER: ', currentUser);
   const currentUsersCountriesIDs = await db.query(
     'SELECT countries_id FROM users_journeys WHERE user_id=$1',
     [currentUser]
   );
-  // console.log('COUNTRIES ID: ', currentUsersCountriesIDs);
   let usersCountries = [];
   currentUsersCountriesIDs.rows.forEach((country) => {
     usersCountries.push(country.countries_id);
   });
-  // console.log('Users Countries IDs: ', usersCountries);
 
   const allCountriesQuery = await db.query('SELECT * FROM countries');
-  // console.log('All Countries: ', allCountriesQuery.rows);
 
   let countries = [];
   for (let i = 0; i < allCountriesQuery.rows.length; i++) {
-    // console.log('Country: ', allCountriesQuery.rows[i].country_code);
-
-    // console.log('I: ', allCountriesQuery.rows[i].id);
-
     for (let j = 0; j < usersCountries.length; j++) {
-      // console.log('J: ', usersCountries[j]);
       if (allCountriesQuery.rows[i].id === usersCountries[j]) {
-        // console.log(
-        //   'FOUND MATCH: ' +
-        //     allCountriesQuery.rows[i].id +
-        //     ' : ' +
-        //     usersCountries[j] +
-        //     ' : ' +
-        //     allCountriesQuery.rows[i].country_code
-        // );
         countries.push(allCountriesQuery.rows[i].country_code);
       }
     }
-
-    // console.log(
-    //   'COUNTRIES: ' +
-    //     countries +
-    //     ' TOTAL: ' +
-    //     countries.length +
-    //     ' USERS: ' +
-    //     users +
-    //     ' COLOR: teal'
-    // );
-
-    // console.log('COUNTRIES: ', countries);
-    // console.log('TOTAL: ', countries.length);
-    // console.log('USERS: ', users);
-
-    // console.log(
-    //   'Users idx: ' +
-    //     usersCountries[i] +
-    //     ' Countries idx: ' +
-    //     allCountriesQuery.rows[i].country_code
-    // );
   }
 
-  // console.log('COUNTRIES: ', countries);
   res.render('index.ejs', {
     countries: countries,
     total: countries.length,
     users: users,
     color: 'teal',
   });
-
-  // console.log(
-  //   'CURRENT USER VISITED COUNTRIES ID: ',
-  //   usersCountries
-  // );
-  // let userCountries = [];
-  // usersCountries.forEach(async (item) => {
-  // console.log('ITEM: ', item);
-  // const convertedResult = await db.query(
-  //   'SELECT country_code FROM countries WHERE id=$1',
-  //   [item]
-  // );
-  // console.log(
-  //   'CONVERTED RESULT: ',
-  //   convertedResult.rows[0].country_code
-  // );
-  // userCountries.push(convertedResult.rows[0].country_code);
-  // console.log('USER COUNTRIES: ', userCountries);
-  // return userCountries;
 });
-// console.log('USER COUNTRIES PART TWO: ', userCountries);
-// });
 
 app.post('/new', async (req, res) => {
   //Hint: The RETURNING keyword can return the data that was inserted.
