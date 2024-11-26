@@ -54,8 +54,8 @@ app.get('/', async (req, res) => {
   console.log('USERS', users);
   const countries = await checkVisisted();
   res.render('index.ejs', {
-    countries: countries,
-    total: countries.length,
+    countries: 0,
+    total: 0,
     users: users,
     color: 'teal',
   });
@@ -88,8 +88,14 @@ app.post('/add', async (req, res) => {
 
 app.post('/user', async (req, res) => {
   const users = await getUsers();
-
   const currentUser = req.body.user;
+
+  // *******************  1.A  *********************
+  // The following code takes the ID's for the
+  // countries the current user visited and
+  // coverts them into country codes.
+  // ******************  START  *******************
+
   const currentUsersCountriesIDs = await db.query(
     'SELECT countries_id FROM users_journeys WHERE user_id=$1',
     [currentUser]
@@ -98,6 +104,14 @@ app.post('/user', async (req, res) => {
   currentUsersCountriesIDs.rows.forEach((country) => {
     usersCountries.push(country.countries_id);
   });
+
+  // *******************  1.A  *********************
+  // Afterwards, we grab all the country data
+  // from our database and check their country
+  // codes against the users. If we find a match
+  // we add the country code to the countries
+  // list.
+  // ***************  CONTINUED  ****************
 
   const allCountriesQuery = await db.query('SELECT * FROM countries');
 
@@ -110,12 +124,21 @@ app.post('/user', async (req, res) => {
     }
   }
 
+  // *******************  1.A  *********************
+  // Finally, we pass the countries list for
+  // page rendering.
+  // ***************  CONTINUED  ****************
+
   res.render('index.ejs', {
     countries: countries,
     total: countries.length,
     users: users,
     color: 'teal',
   });
+
+  // *******************  1.A  *********************
+  // This conlcudes the above code
+  // *******************  END  ********************
 });
 
 app.post('/new', async (req, res) => {
