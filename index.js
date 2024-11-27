@@ -27,6 +27,13 @@ let currentUserId = 1;
 // ];
 
 let users = [];
+let currentUser;
+
+async function sayGlobalUser() {
+  console.log('GLOBAL CURRENT USER: ', currentUser);
+}
+
+sayGlobalUser();
 
 async function getUsers() {
   const result = await db.query('SELECT * FROM users');
@@ -46,12 +53,12 @@ async function checkVisisted() {
   result.rows.forEach((country) => {
     countries.push(country.country_code);
   });
-  console.log('COUNTRIES: ', countries);
+  // console.log('COUNTRIES: ', countries);
   return countries;
 }
 app.get('/', async (req, res) => {
   const users = await getUsers();
-  console.log('USERS', users);
+  // console.log('USERS', users);
   const countries = await checkVisisted();
   res.render('index.ejs', {
     countries: 0,
@@ -61,34 +68,76 @@ app.get('/', async (req, res) => {
   });
 });
 
+// app.post('/add', async (req, res) => {
+//   const input = req.body['country'];
+
+//   try {
+//     const result = await db.query(
+//       "SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';",
+//       [input.toLowerCase()]
+//     );
+
+//     const data = result.rows[0];
+//     // console.log('ADD ROUTE DATA: ', data);
+//     const countryCode = data.country_code;
+//     try {
+//       await db.query(
+//         'INSERT INTO visited_countries (country_code) VALUES ($1)',
+//         [countryCode]
+//       );
+//       res.redirect('/');
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+// UPDATING POST/ADD ROUTE
 app.post('/add', async (req, res) => {
   const input = req.body['country'];
+  console.log('GLOBAL USER INSIDE POST/ADD ROUTE: ', currentUser);
 
   try {
+    // const result = await db.query(
+    //   "SELECT country_code FROM countries WHERE LOWER (country_name) LIKE '%' || $1 || '%';",
+    //   [input.toLowerCase()]
+    // );
     const result = await db.query(
-      "SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';",
+      "SELECT id FROM countries WHERE LOWER (country_name) LIKE '%' || $1 || '%';",
       [input.toLowerCase()]
     );
 
     const data = result.rows[0];
-    const countryCode = data.country_code;
+    // console.log('DATA: ', data);
+    // const countryCode = data.country_code;
+    const countryID = data.id;
+    // console.log('DATA ID: ', countryID);
     try {
+      // await db.query(
+      //   'INSERT INTO visited_countries (country_code) VALUES ($1)',
+      //   [countryCode]
+      // );
       await db.query(
-        'INSERT INTO visited_countries (country_code) VALUES ($1)',
-        [countryCode]
+        'INSERT INTO users_journeys (user_id, countries_id) VALUES ($1, $2)',
+        [currentUser, countryID]
       );
+      console.log('Inner try is listening...');
       res.redirect('/');
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
 });
 
 app.post('/user', async (req, res) => {
   const users = await getUsers();
-  const currentUser = req.body.user;
+  // const currentUser = req.body.user;
+  currentUser = req.body.user;
+  console.log('CURRENT USER: ', currentUser);
 
   // *******************  1.A  *********************
   // The following code takes the ID's for the
@@ -128,6 +177,8 @@ app.post('/user', async (req, res) => {
   // Finally, we pass the countries list for
   // page rendering.
   // ***************  CONTINUED  ****************
+
+  sayGlobalUser();
 
   res.render('index.ejs', {
     countries: countries,
