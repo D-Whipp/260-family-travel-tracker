@@ -68,6 +68,13 @@ app.get('/', async (req, res) => {
   });
 });
 
+// *******************  2.A  *********************
+// DEPRECATED: Instructors code, Required
+// updating as features progressed.
+// ******************  START  *******************
+
+// *****  SEE 2.B FOR ROUTE UPDATE  *******
+
 // app.post('/add', async (req, res) => {
 //   const input = req.body['country'];
 
@@ -93,37 +100,41 @@ app.get('/', async (req, res) => {
 //     console.log(err);
 //   }
 // });
+// *******************  2.A  *********************
+// This concludes the above code
+// ******************  END  *********************
 
+// *******************  2.B  *********************
 // UPDATING POST/ADD ROUTE
+// ******************  START  *******************
 app.post('/add', async (req, res) => {
   const input = req.body['country'];
-  console.log('GLOBAL USER INSIDE POST/ADD ROUTE: ', currentUser);
 
   try {
-    // const result = await db.query(
-    //   "SELECT country_code FROM countries WHERE LOWER (country_name) LIKE '%' || $1 || '%';",
-    //   [input.toLowerCase()]
-    // );
+    // *******************  2.B  *********************
+    // Same as the original /add route, we take
+    // the user's input and check for it in our db
+    // ***************  CONTINUED  ****************
+
     const result = await db.query(
       "SELECT id FROM countries WHERE LOWER (country_name) LIKE '%' || $1 || '%';",
       [input.toLowerCase()]
     );
 
     const data = result.rows[0];
-    // console.log('DATA: ', data);
-    // const countryCode = data.country_code;
     const countryID = data.id;
-    // console.log('DATA ID: ', countryID);
     try {
-      // await db.query(
-      //   'INSERT INTO visited_countries (country_code) VALUES ($1)',
-      //   [countryCode]
-      // );
+      // *******************  2.B  *********************
+      // Here we've changed our table to store the
+      // user's visited country inside of users_journeys
+      // and NOT visited_countries.
+      // It's how I've chosen to keep track of each
+      // individual user's journey.
+      // ***************  CONTINUED  ****************
       await db.query(
         'INSERT INTO users_journeys (user_id, countries_id) VALUES ($1, $2)',
         [currentUser, countryID]
       );
-      console.log('Inner try is listening...');
       res.redirect('/');
     } catch (error) {
       console.log(error);
@@ -131,6 +142,9 @@ app.post('/add', async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+  // *******************  2.B  *********************
+  // This conlcudes the above code
+  // *******************  END  ********************
 });
 
 app.post('/user', async (req, res) => {
