@@ -14,7 +14,6 @@ body {
   background: #21252b;
   font-family: "Roboto", sans-serif;
 }
-
 .ag-canvas {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -438,7 +437,6 @@ button {
 .tab-view-steps > label:hover {
   background: #e5e5e5;
 }
-
 .spacer {
   margin-bottom: 20px;
 }

@@ -29,11 +29,11 @@ let currentUserId = 1;
 let users = [];
 let currentUser;
 
-async function sayGlobalUser() {
-  console.log('GLOBAL CURRENT USER: ', currentUser);
-}
+// async function sayGlobalUser() {
+//   console.log('GLOBAL CURRENT USER: ', currentUser);
+// }
 
-sayGlobalUser();
+// sayGlobalUser();
 
 async function getUsers() {
   const result = await db.query('SELECT * FROM users');
@@ -150,8 +150,25 @@ app.post('/add', async (req, res) => {
 app.post('/user', async (req, res) => {
   const users = await getUsers();
   // const currentUser = req.body.user;
+  // locals variable breaks the site
+  // console.log("LOCALS: ", res);
+
+
+  // *******************  1.A - b  *******************
+  // ****************** START ********************
+  // Using if statement here to render new.ejs so a family
+  // member can be added if the Add Family Member
+  // option is selected. 
+
+  if (req.body.add) {
+    res.render('new.ejs');
+  }
+  // *****************  1.A - b  *******************
+  // ******************  END  ********************
+
+
   currentUser = req.body.user;
-  console.log('CURRENT USER: ', currentUser);
+  // console.log('CURRENT USER: ', currentUser);
 
   // *******************  1.A  *********************
   // The following code takes the ID's for the
@@ -192,7 +209,7 @@ app.post('/user', async (req, res) => {
   // page rendering.
   // ***************  CONTINUED  ****************
 
-  sayGlobalUser();
+  // sayGlobalUser();
 
   res.render('index.ejs', {
     countries: countries,
@@ -209,6 +226,15 @@ app.post('/user', async (req, res) => {
 app.post('/new', async (req, res) => {
   //Hint: The RETURNING keyword can return the data that was inserted.
   //https://www.postgresql.org/docs/current/dml-returning.html
+
+  // res.render('new.ejs', {
+  //   countries: countries,
+  //   total: countries.length,
+  //   users: users,
+  //   color: 'teal',
+  // })
+  res.render('new.ejs');
+  // res.send('new.ejs')
 });
 
 app.listen(port, () => {

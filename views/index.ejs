@@ -16,13 +16,17 @@
       action="/user"
       method="post"
     >
+
+
       <% users.forEach(function(user) { %>
+
       <input
         type="submit"
         name="user"
         value="<%= user.id %>"
         id="<%= user.id %>"
       />
+
       <label
         for="<%= user.id %>"
         style="background-color: <%= user.color %>"
@@ -31,9 +35,34 @@
       </label>
       <% }); %>
 
+
+      <input 
+        type="submit" 
+        name="add" 
+        value="new" 
+        id="tab" 
+        />
+
+
+      <label for="tab">
+          Add Family Member
+      </label>
+
+
+
+
+    </form>
+<!-- 
+    <form
+      class="tab-view tab-view-height-auto .custom-tab-display-inline"
+      action="/new"
+      method="post"
+    >
+
       <input type="submit" name="add" value="new" id="tab" />
       <label for="tab">Add Family Member</label>
-    </form>
+    </form> -->
+
 
     <form action="/add" method="post">
       <input
