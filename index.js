@@ -150,8 +150,6 @@ app.post('/add', async (req, res) => {
 app.post('/user', async (req, res) => {
   const users = await getUsers();
   // const currentUser = req.body.user;
-  // locals variable breaks the site
-  // console.log("LOCALS: ", res);
 
 
   // *******************  1.A - b  *******************
@@ -233,7 +231,29 @@ app.post('/new', async (req, res) => {
   //   users: users,
   //   color: 'teal',
   // })
-  res.render('new.ejs');
+  // res.render('new.ejs');
+  console.log('/new req: ', req.body);
+  console.log('/new is listening');
+  console.log('Name: ', req.body.name);
+  console.log('Color: ', req.body.color);
+
+  try {
+    
+    const result = await db.query(
+      'INSERT INTO users (first_name, color) VALUES ($1, $2)', [req.body.name, req.body.color]
+    );
+    res.redirect('/');
+  } catch (error) {
+    console.log(error)
+  }
+
+  // res.render('index.ejs', {
+  //   countries: [],
+  //   total: 0,
+  //   users: users,
+  //   color: 'teal',
+  // });
+
   // res.send('new.ejs')
 });
 
