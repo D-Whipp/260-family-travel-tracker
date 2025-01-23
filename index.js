@@ -104,6 +104,8 @@ app.post('/user', async (req, res) => {
   // option is selected. 
   if (req.body.add) {
     res.render('new.ejs');
+    // ************ BUG FIX ************
+    // By adding the below return we fix the headers error
     return;
   }
   // *****************  1.A - b  *******************
