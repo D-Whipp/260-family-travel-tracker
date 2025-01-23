@@ -104,6 +104,7 @@ app.post('/user', async (req, res) => {
   // option is selected. 
   if (req.body.add) {
     res.render('new.ejs');
+    return;
   }
   // *****************  1.A - b  *******************
   // ******************  END  ********************
@@ -175,6 +176,7 @@ app.post('/new', async (req, res) => {
       'INSERT INTO users (first_name, color) VALUES ($1, $2)', [req.body.name, req.body.color]
     );
     res.redirect('/');
+    // res.render('index.ejs', {})
   } catch (error) {
     console.log(error)
   }
