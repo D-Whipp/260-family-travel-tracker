@@ -95,6 +95,30 @@ app.post('/add', async (req, res) => {
   // *******************  END  ********************
 });
 
+// *******************  1.D  *********************
+// SETTING UP REMOVE COUNTRY ROUTE 
+// ******************  START  *******************
+  app.post('/remove', async (req, res) => {
+  const input = req.body['country'];
+
+  try {
+    // *******************  1.D  *********************
+    // THE PLAN: 
+    // We're taking the user's input and checking for it
+    // in the user's visited countries db
+    // if we find it then we'll delete it
+    // ***************  CONTINUED  ****************
+
+
+  } catch (error) {
+    console.log(error.message)
+  }
+  console.log('Input: ', input);
+});
+// *******************  1.D  *********************
+// This concludes the above code
+// *******************  END  ********************
+
 app.post('/user', async (req, res) => {
   const users = await getUsers();
   // *******************  1.A - b  *******************
