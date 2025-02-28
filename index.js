@@ -108,10 +108,26 @@ app.post('/add', async (req, res) => {
     // in the user's visited countries db
     // if we find it then we'll delete it
     // ***************  CONTINUED  ****************
-
+    const result = await db.query(
+      "SELECT id FROM countries WHERE LOWER (country_name) LIKE '%' || $1 || '%'", 
+      [input.toLowerCase()]
+    );
+    const data = result.rows[0];
+    const countryID = data.id;
+    console.log("REMOVE ID: ", countryID);
+    try {
+    // *******************  2.D  *********************
+    // We've successfully grabbed the country id from 
+    // the user input. Now we'll compare it against the
+    // user's journey db and look for a match.
+    // ***************  CONTINUED  ****************
+      
+  } catch (error) {
+      console.log('error.message');
+    }
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
   console.log('Input: ', input);
 });
