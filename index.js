@@ -114,22 +114,41 @@ app.post('/add', async (req, res) => {
     );
     const data = result.rows[0];
     const countryID = data.id;
-    console.log("REMOVE ID: ", countryID);
+    // console.log("USER ID: ", currentUser);
+    // console.log("REMOVE ID: ", countryID);
     try {
     // *******************  2.D  *********************
     // We've successfully grabbed the country id from 
     // the user input. Now we'll compare it against the
     // user's journey db and look for a match.
     // ***************  CONTINUED  ****************
+    const checkUserDB = await db.query("SELECT countries_id FROM users_journeys WHERE user_id=$1", [currentUser]);
+    let usersVisitedCountriesList = [];
+    checkUserDB.rows.forEach((country) => {
+      usersVisitedCountriesList.push(country.countries_id)
+    });
+    if (usersVisitedCountriesList.includes(countryID)) {
+      // *******************  3.D *********************
+     // Once we have our match we delete the user input
+      // from their journey. 
+      // ***************  CONTINUED  ****************
+      console.log("FOUND MATCH");
+      await db.query(
+        'DELETE FROM users_journeys WHERE user_id=$1 AND countries_id=$2', [currentUser, countryID]
+      );
+      res.redirect('/');
+    }
+
+    // console.log("Visited Countries List: ", usersVisitedCountriesList );
       
   } catch (error) {
-      console.log('error.message');
+      console.log(error.message);
     }
 
   } catch (error) {
     console.log(error.message);
   }
-  console.log('Input: ', input);
+  // console.log('Input: ', input);
 });
 // *******************  1.D  *********************
 // This concludes the above code
